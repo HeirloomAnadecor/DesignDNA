@@ -197,11 +197,14 @@ Ton: premium, poetic, cald, adresat cu "tu".`;
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ prompt })
       });
+
       const data = await res.json();
-      if (data.error) {
-        throw new Error(data.error);
-      }
-      setDocText(data.text);
+
+if (!res.ok) {
+  throw new Error(data.error || 'Eroare la generare');
+}
+
+setDocText(data.text);
       setShowDoc(true);
     } catch (e: any) {
       console.error("Generation failed:", e);
@@ -285,7 +288,7 @@ Ton: premium, poetic, cald, adresat cu "tu".`;
     }).join('')}</div>` : '';
 
     const projectsHTML = `<div style="margin:20px 0;padding-top:16px;border-top:1px solid #E0D8C8;"><div style="font-size:9px;letter-spacing:4px;color:#888;margin-bottom:12px;">PROIECTE ANADECOR RECOMANDATE</div>${matched.slice(0, 4).map((p, i) => {
-      const elColors = p.elements.map(e => EL[e].color);
+      const elColors = p.elements.map((e: string) => EL[e].color);
       const grad = elColors.length > 1 ? `linear-gradient(135deg, ${elColors[0]}33 0%, #f4f1ea 60%, ${elColors[elColors.length - 1]}33 100%)` : `linear-gradient(135deg, ${elColors[0]}33 0%, #f4f1ea 70%)`;
       return `<div style="display:flex;gap:14px;margin-bottom:14px;border:1px solid #E8E0D0;overflow:hidden;">
       <div style="width:130px;height:110px;flex-shrink:0;background:${grad};display:flex;align-items:center;justify-content:center;text-align:center;padding:8px;">
@@ -295,7 +298,7 @@ Ton: premium, poetic, cald, adresat cu "tu".`;
         <div style="font-size:14px;color:#9A7030;margin-bottom:2px;"><a href="${p.url || 'https://anadecor.ro'}" target="_blank" style="color:#9A7030;text-decoration:none;font-weight:bold;">${p.name}</a>${i === 0 ? ' <span style="font-size:9px;color:#C8A96E;">BEST MATCH</span>' : ''}</div>
         <div style="font-size:9px;letter-spacing:1px;color:#999;margin-bottom:5px;text-transform:uppercase;">${p.type} · ${p.style}</div>
         <div style="font-size:10px;color:#777;font-style:italic;line-height:1.6;margin-bottom:5px;">${p.desc}</div>
-        <div style="margin-bottom:6px;">${p.cromatics.map(c => `<span style="font-size:8px;padding:2px 6px;border:1px solid #ddd;color:#888;margin-right:3px;">${c}</span>`).join('')}</div>
+        <div style="margin-bottom:6px;">${p.cromatics.map((c: string) => `<span style="font-size:8px;padding:2px 6px;border:1px solid #ddd;color:#888;margin-right:3px;">${c}</span>`).join('')}</div>
         <div><a href="${p.url || 'https://anadecor.ro'}" target="_blank" style="font-size:9px;color:#9A7030;text-decoration:underline;font-weight:500;">Vezi detalii proiect pe anadecor.ro →</a></div>
       </div>
     </div>`;
