@@ -191,28 +191,36 @@ Scrie 5 paragrafe poetice, separate prin linie goală, fără titluri:
 
 Ton: premium, poetic, cald, adresat cu "tu".`;
 
-    try {
-      const res = await fetch('/api/generate-dna', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt })
-      });
+   try {
+  const res = await fetch('/api/generate', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ prompt })
+  });
 
-      const data = await res.json();
+  const data = await res.json();
 
-if (!res.ok) {
-  throw new Error(data.error || 'Eroare la generare');
+  if (!res.ok) {
+    throw new Error(data.error || 'Eroare la generare');
+  }
+
+  setDocText(data.text);
+  setShowDoc(true);
+
+} catch (e: any) {
+  console.error("Generation failed:", e);
+
+  setDocText(
+    `Generarea nu a reușit: ${
+      e.message || 'Eroare la apelul către server'
+    }. Încearcă din nou.`
+  );
+
+  setShowDoc(true);
 }
 
-setDocText(data.text);
-      setShowDoc(true);
-    } catch (e: any) {
-      console.error("Generation failed:", e);
-      setDocText(`Generarea nu a reușit: ${e.message || 'Eroare la apelul către server'}. Încearcă din nou.`);
-      setShowDoc(true);
-    }
-    stopTimer();
-    setGenerating(false);
+stopTimer();
+setGenerating(false);
   };
 
   const downloadPDF = () => {
